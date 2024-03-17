@@ -10,8 +10,13 @@ from .models import User, db
 @app.route("/", methods=["GET"])
 def user_records():
     """Create a user via query string parameters."""
+
+    for key, value in request.args.items():
+        print(f"Key: {key}, Value: {value}")
     username = request.args.get("user")
     email = request.args.get("email")
+    bio = request.args.get('bio')
+    print(username, email)
     if username and email:
         existing_user = User.query.filter(User.username == username or User.email == email).first()
         if existing_user:
@@ -19,9 +24,8 @@ def user_records():
         new_user = User(
             username=username,
             email=email,
-            created=datetime.now(),
-            bio="In West Philadelphia born and raised, \
-            on the playground is where I spent most of my days",
+            created_at=datetime.now(),
+            bio=bio,
             admin=False,
         )  # Create an instance of the User class
         db.session.add(new_user)  # Adds new User record to database
